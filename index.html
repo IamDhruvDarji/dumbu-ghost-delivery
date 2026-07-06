@@ -407,7 +407,7 @@ let _tap=0,_tt=null;$("walletH").addEventListener("click",()=>{_tap++;clearTimeo
 function startRun(){newRunState("run");show(null);for(const s of["home","shop","settings"])$(s).classList.add("hidden");if(curSkin().god)banner("⚡ GOD MODE","smash everything — but wolves & the king still bite!","#ffd166");else banner("NIGHT SHIFT BEGINS","deliver the "+S.soul.name.toLowerCase()+" before sunrise",S.soul.color);}
 
 refreshUI();show("home");
-(function loop(){update();draw();requestAnimationFrame(loop);})();
+let _last=0,_acc=0;const _STEP=1000/60;function loop(ts){if(!_last)_last=ts;_acc+=Math.min(ts-_last,100);_last=ts;while(_acc>=_STEP){update();_acc-=_STEP;}draw();requestAnimationFrame(loop);}requestAnimationFrame(loop);
 </script>
 </body>
 </html>
