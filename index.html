@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<!--
+  Dumbu: Ghost Delivery
+  A spooky endless-runner browser game.
+  (c) 2026 Dhruv Darji. All rights reserved.
+  Concept & game design: Dhruv Darji. Implementation AI-assisted with Claude (Anthropic).
+  Contact: dhruvdarji298@gmail.com | linkedin.com/in/dhruv-darji-29aug2001
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -45,9 +52,19 @@
   #overBtns{position:fixed;left:0;right:0;bottom:8%;display:flex;gap:14px;justify-content:center;z-index:6;}
   #overBtns button{background:var(--card2);}
   #overBtns #againBtn{background:var(--lantern);color:var(--ink);}
+
+  /* rotate prompt (mobile portrait) */
+  #rotate{position:fixed;inset:0;z-index:99;display:none;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;background:var(--ink);text-align:center;padding:30px;}
+  #rotate .ph{font-size:64px;animation:rotph 1.6s ease-in-out infinite;}
+  @keyframes rotph{0%,20%{transform:rotate(0)}55%,100%{transform:rotate(90deg)}}
+  #rotate h2{color:var(--lantern);}
+  #rotate p{color:var(--dim);font-size:14px;max-width:280px;}
+  @media (orientation:portrait) and (pointer:coarse){ #rotate{display:flex;} }
 </style>
 </head>
 <body>
+<div id="rotate"><div class="ph">📱</div><h2>ROTATE YOUR PHONE</h2><p>Dumbu delivers best in landscape. Turn your phone sideways to play!</p></div>
 <div id="wrap"><canvas id="game"></canvas></div>
 
 <section id="home" class="screen">
@@ -376,7 +393,7 @@ function renderDiffs(){const row=$("diffRow");row.innerHTML="";for(const d of DI
 function renderSound(){$("sfxBtn").className="pill"+(P.sfx?" on":"");$("sfxBtn").innerHTML=(P.sfx?"🔊":"🔇")+" Sound FX<small>"+(P.sfx?"on":"off")+"</small>";$("musicBtn").className="pill"+(P.music?" on":"");$("musicBtn").innerHTML="🎵 Music<small>"+(P.music?"on":"off")+"</small>";}
 $("sfxBtn").onclick=()=>{P.sfx=!P.sfx;ac();SFX.click();renderSound();};
 $("musicBtn").onclick=()=>{P.music=!P.music;ac();SFX.click();renderSound();};
-$("playBtn").onclick=()=>{ac();SFX.click();startRun();};
+$("playBtn").onclick=()=>{ac();SFX.click();if(("ontouchstart"in window)&&document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(()=>{});}startRun();};
 $("shopBtn").onclick=()=>{ac();SFX.click();show("shop");};
 $("setBtn").onclick=()=>{ac();SFX.click();show("settings");};
 $("againBtn").onclick=()=>{SFX.click();startRun();};
@@ -385,7 +402,7 @@ for(const b of document.querySelectorAll("[data-back]"))b.onclick=()=>{SFX.click
 $("cityBtn").onclick=()=>{SFX.click();const inp=$("cityInput");inp.classList.remove("hidden");inp.value=P.city;inp.focus();};
 $("cityInput").addEventListener("keydown",e=>{if(e.key==="Enter"){if(e.target.value.trim()){setCity(e.target.value);SFX.deliver();}e.target.classList.add("hidden");refreshUI();}});
 // dev: tap wallet 5x for coins
-let _tap=0,_tt=null;$("walletH").addEventListener("click",()=>{_tap++;clearTimeout(_tt);_tt=setTimeout(()=>_tap=0,1200);if(_tap>=5){_tap=0;P.coins+=60000;SFX.deliver();refreshUI();}});
+let _tap=0,_tt=null;$("walletH").addEventListener("click",()=>{_tap++;clearTimeout(_tt);_tt=setTimeout(()=>_tap=0,1200);if(_tap>=5){_tap=0;P.coins+=50000;SFX.deliver();refreshUI();}});
 
 function startRun(){newRunState("run");show(null);for(const s of["home","shop","settings"])$(s).classList.add("hidden");if(curSkin().god)banner("⚡ GOD MODE","smash everything — but wolves & the king still bite!","#ffd166");else banner("NIGHT SHIFT BEGINS","deliver the "+S.soul.name.toLowerCase()+" before sunrise",S.soul.color);}
 
